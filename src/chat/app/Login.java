@@ -12,6 +12,7 @@ import java.net.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 /**
  *
@@ -26,7 +27,7 @@ public class Login extends javax.swing.JFrame {
         initComponents();
     }
 
-    static String url = "jdbc:mysql://10.10.14.3:3306/";
+    static String url = "jdbc:mysql://10.10.11.59:3306/";
     static String dbName = "te3157db";
     static String driver = "com.mysql.jdbc.Driver";
     static String username = "te3157";
@@ -136,17 +137,27 @@ public class Login extends javax.swing.JFrame {
         password = new String(jPasswordField_Password.getPassword());
         System.out.println("Username : "+username);
         System.out.println("Password : "+password);
-
+        
         try {
             PreparedStatement ps = conn.prepareStatement("select * from users where name=? and password=?");
             ps.setString(1, username);
             ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
-            System.out.println("tHere");
+            System.out.println(rs.next()+"tHere");
             //ps.close();
-            if (rs.next()) {
+            Boolean x;
+            x=rs.getBoolean("isLoggedIn");
+            System.out.println(x);
+            String pw=rs.getString("password");
+            if(!x) {
+                
+//                ps = conn.prepareStatement("update users set isLoggedIn=1 where username=?");
+//                ps.setString(1, username);
+//                ps.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Login Successfull");
+                this.dispose();
+                new MainPage().setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Sorry");
             }
